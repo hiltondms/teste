@@ -1,0 +1,125 @@
+'*****************************************************************
+'This class was created by the Web Service References Tool 2.0.
+'
+'Created: 7/31/2014 09:57:20 PM
+'
+'Description:
+'This class is a Visual Basic for Applications class representation of the Web service
+'as defined by http://ssw.inf.br/ws/sswNrRecepcao/index.php?wsdl.
+'
+'To Use:
+'Dimension a variable as new clsws_sswinfbrnrrecepcao, and then write code to
+'use the methods provided by the class.
+'Example:
+' Dim ExampleVar as New clsws_sswinfbrnrrecepcao
+' debug.print ExampleVar.wsm_nrRecepcao("Sample Input")
+'
+'For more information, see Complex Types in Web Service References
+'Tool 2.0 Help.
+'
+'Changes to the code in this class may result in incorrect behavior.
+'
+'*****************************************************************
+
+'Dimensioning private class variables.
+Private sc_sswinfbrnrrecepcao As SoapClient30
+Private Const c_WSDL_URL As String = "http://ssw.inf.br/ws/sswNrRecepcao/index.php?wsdl"
+Private Const c_SERVICE As String = "sswinfbr.nrrecepcao"
+Private Const c_PORT As String = "sswinfbr.nrrecepcaoPort"
+Private Const c_SERVICE_NAMESPACE As String = "urn:sswinfbr.nrrecepcao"
+
+Private Sub Class_Initialize()
+    '*****************************************************************
+    'This subroutine will be called each time the class is instantiated.
+    'Creates sc_ComplexTypes as new SoapClient30, and then
+    'initializes sc_ComplexTypes.mssoapinit2 with WSDL file found in
+    'http://ssw.inf.br/ws/sswNrRecepcao/index.php?wsdl.
+    '*****************************************************************
+
+    Dim str_WSML As String
+    str_WSML = ""
+
+    Set sc_sswinfbrnrrecepcao = New SoapClient30
+
+    sc_sswinfbrnrrecepcao.MSSoapInit2 c_WSDL_URL, str_WSML, c_SERVICE, c_PORT, c_SERVICE_NAMESPACE
+    'Use the proxy server defined in Internet Explorer's LAN settings by
+    'setting ProxyServer to <CURRENT_USER>
+    sc_sswinfbrnrrecepcao.ConnectorProperty("ProxyServer") = "<CURRENT_USER>"
+    'Autodetect proxy settings if Internet Explorer is set to autodetect
+    'by setting EnableAutoProxy to True
+    sc_sswinfbrnrrecepcao.ConnectorProperty("EnableAutoProxy") = True
+
+
+End Sub
+
+Private Sub Class_Terminate()
+    '*****************************************************************
+    'This subroutine will be called each time the class is destructed.
+    'Sets sc_ComplexTypes to Nothing.
+    '*****************************************************************
+
+    'Error Trap
+    On Error GoTo Class_TerminateTrap
+
+    Set sc_sswinfbrnrrecepcao = Nothing
+
+Exit Sub
+
+Class_TerminateTrap:
+    sswinfbrnrrecepcaoErrorHandler ("Class_Terminate")
+End Sub
+
+Private Sub sswinfbrnrrecepcaoErrorHandler(str_Function As String)
+    '*****************************************************************
+    'This subroutine is the class error handler. It can be called from any class subroutine or function
+    'when that subroutine or function encounters an error. Then, it will raise the error along with the
+    'name of the calling subroutine or function.
+    '*****************************************************************
+
+    'SOAP Error
+    If sc_sswinfbrnrrecepcao.FaultCode <> "" Then
+        Err.Raise vbObjectError, str_Function, sc_sswinfbrnrrecepcao.FaultString
+    'Non SOAP Error
+    Else
+        Err.Raise Err.Number, str_Function, Err.Description
+    End If
+
+End Sub
+
+Public Function wsm_nrRecepcao(ByVal str_dominio As String, ByVal str_login As String, ByVal str_senha As String, ByVal dcml_nr As Double, ByVal str_peso As String, ByVal str_cubagem As String, ByVal dcml_multiplicador As Double) As Double
+    '*****************************************************************
+    'Proxy function created from http://ssw.inf.br/ws/sswNrRecepcao/index.php?wsdl.
+    '*****************************************************************
+
+    'Error Trap
+    On Error GoTo wsm_nrRecepcaoTrap
+
+    wsm_nrRecepcao = sc_sswinfbrnrrecepcao.nrRecepcao(str_dominio, str_login, str_senha, dcml_nr, str_peso, str_cubagem, dcml_multiplicador)
+
+Exit Function
+wsm_nrRecepcaoTrap:
+    sswinfbrnrrecepcaoErrorHandler "wsm_nrRecepcao"
+End Function
+
+Public Function wsm_nrRecepcaoEquip(ByVal str_dominio As String, ByVal str_login As String, ByVal str_senha As String, ByVal dcml_nr As Double, ByVal str_peso As String, ByVal str_cubagem As String, ByVal dcml_multiplicador As Double, ByVal dcml_equipamento As Double) As Double
+    '*****************************************************************
+    'Proxy function created from http://ssw.inf.br/ws/sswNrRecepcao/index.php?wsdl.
+    '*****************************************************************
+
+    'Error Trap
+    On Error GoTo wsm_nrRecepcaoEquipTrap
+
+    wsm_nrRecepcaoEquip = sc_sswinfbrnrrecepcao.nrRecepcaoEquip(str_dominio, str_login, str_senha, dcml_nr, str_peso, str_cubagem, dcml_multiplicador, dcml_equipamento)
+
+Exit Function
+wsm_nrRecepcaoEquipTrap:
+    sswinfbrnrrecepcaoErrorHandler "wsm_nrRecepcaoEquip"
+End Function
+
+
+
+Sub ws()
+
+ Call Class_Initialize
+ Call wsm_nrRecepcao("NPI", "balanc", "balanca", 1, "1", "1", 1)
+End Sub
